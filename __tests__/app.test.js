@@ -33,16 +33,6 @@ describe("GET /api/topics", () => {
 });
 
 
-// describe("GET /api/non-existent-route", () => {
-//   it("404: as route does not exist - responds with 'Not found'", () => {
-//     return request(app)
-//     .get("/api/non-existent-route")
-//     .expect(404)
-//     .then(({body}) => {
-//       expect(body.msg).toBe('Not found');
-//       });
-//   });
-// });
 
 
 
