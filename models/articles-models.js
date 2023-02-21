@@ -16,4 +16,23 @@ fetchArticles = () => {
   });
 };
 
-module.exports = { fetchArticles };
+fetchArticleById = (article_id) => {
+  return db
+    .query(
+      `
+  SELECT articles.author, articles.title, articles.article_id, articles.body, articles.topic, articles.created_at, articles.votes, articles.article_img_url
+  FROM articles 
+  WHERE article_id = $1
+  `,
+      [article_id]
+    )
+    .then((result) => {
+      console.log(result);
+      if(result.rowCount === 0) {
+        return Promise.reject({status: 404, msg: "Article not found"});
+      } 
+      return result.rows[0];
+    });
+};
+
+module.exports = { fetchArticles, fetchArticleById };
