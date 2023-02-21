@@ -64,6 +64,7 @@ describe("app", () => {
               "article_img_url",
               expect.any(String)
             );
+            expect(article).toHaveProperty("comment_count", expect.any(Number));
           });
         });
     });
@@ -77,15 +78,13 @@ describe("app", () => {
           expect(articles).toHaveLength(12);
 
           articles.forEach((article) => {
-            expect(article).toHaveProperty("comment_count", expect.any(String));
-            expect(typeof Number(article.comment_count)).toBe("number");
+            expect(article).toHaveProperty("comment_count", expect.any(Number));
           });
 
           const mostCommentedArticle = articles.find(
             (article) => article.article_id === 1
           );
-          console.log(mostCommentedArticle);
-          expect(mostCommentedArticle.comment_count).toBe("11");
+          expect(mostCommentedArticle.comment_count).toBe(11);
         });
     });
     it("200: responds with an array of article objects sorted by date of creation in descending order", () => {
