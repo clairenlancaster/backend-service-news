@@ -9,7 +9,7 @@ beforeEach(() => {
 });
 
 afterAll(() => {
-  return db.end();
+  db.end();
 });
 
 describe("app", () => {
@@ -103,6 +103,49 @@ describe("app", () => {
             }
           );
           expect(articles).toEqual(dateOrderedArticles);
+        });
+    });
+  });
+
+  describe("GET /api/articles/:article_id", () => {
+    it("200: returns an article object with the properties: author, title, article_id, body, topic, created_at, votes and article_img_url", () => {
+      return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then(({ body }) => {
+          const { articles } = body;
+          expect(typeof articles).toBe("object");
+
+          expect(articles).toHaveProperty("author", expect.any(String));
+          expect(articles).toHaveProperty("title", expect.any(String));
+          expect(articles).toHaveProperty("article_id", expect.any(Number));
+          expect(articles).toHaveProperty("topic", expect.any(String));
+          expect(articles).toHaveProperty("created_at", expect.any(String));
+          expect(articles).toHaveProperty("votes", expect.any(Number));
+          expect(articles).toHaveProperty(
+            "article_img_url",
+            expect.any(String)
+          );
+
+          expect(articles.author).toBe("butter_bridge");
+          expect(articles.title).toBe("Living in the shadow of a great man");
+          expect(articles.votes).toBe(100);
+        });
+    });
+    it("400: responds with a message of 'Bad request' when sent an invalid article_id", () => {
+      return request(app)
+        .get("/api/articles/invalid-article-id")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad request");
+        });
+    });
+    it("404: responds with a message of 'Article not found' when sent a query for a valid but non-existent article_id", () => {
+      return request(app)
+        .get("/api/articles/25")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Article not found");
         });
     });
   });
