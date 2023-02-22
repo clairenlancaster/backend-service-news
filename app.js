@@ -7,6 +7,9 @@ const {
 } = require("./controllers/articles-controllers");
 const { postComment } = require("./controllers/comments-controllers");
 const {
+  sendCommentsByArticleId,
+} = require("./controllers/comments-controllers");
+const {
   handle404NonExistantPaths,
   handlePSQL400s,
   handleCustomErrors,
@@ -18,6 +21,7 @@ app.use(express.json());
 app.get("/api/topics", sendTopics);
 app.get("/api/articles", sendArticles);
 app.get("/api/articles/:article_id", sendArticleById);
+app.get("/api/articles/:article_id/comments", sendCommentsByArticleId);
 
 app.post("/api/articles/:article_id/comments", postComment);
 

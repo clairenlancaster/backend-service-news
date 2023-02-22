@@ -150,6 +150,52 @@ describe("app", () => {
     });
   });
 
+  describe("GET /api/articles/:article_id/comments", () => {
+    it("200: returns an array of comments for the given article_id - each comment should have the properties: comment_id, votes, created_at, author, body and article_id", () => {
+      return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then(({ body }) => {
+          const { comments } = body;
+
+          expect(comments).toHaveLength(11);
+
+          comments.forEach((comment) => {
+            expect(comment).toHaveProperty("comment_id", expect.any(Number));
+            expect(comment).toHaveProperty("votes", expect.any(Number));
+            expect(comment).toHaveProperty("created_at", expect.any(String));
+            expect(comment).toHaveProperty("author", expect.any(String));
+            expect(comment).toHaveProperty("body", expect.any(String));
+            expect(comment).toHaveProperty("article_id", expect.any(Number));
+          });
+        });
+    });
+    it("200: returns an empty array of comments when sent a query for an article_id that exists but has no comments", () => {
+      return request(app)
+        .get("/api/articles/2/comments")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.comments).toHaveLength(0);
+        });
+    });
+    it("400: responds with a message of 'Bad request' when sent a query for comments linked to an invalid article_id", () => {
+      return request(app)
+        .get("/api/articles/invalid-article-id/comments")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad request");
+        });
+    });
+    it("404: responds with a message of 'article_id not found' when sent a query for comments linked to a valid but non-existent article_id", () => {
+      return request(app)
+        .get("/api/articles/25/comments")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Article not found");
+        });
+    });
+  });
+
   // describe.only("POST /api/articles/:article_id/comments", () => {
   //   it("201: responds with the posted comment - an object with the properties: username and body.", () => {
   //     const newComment = {

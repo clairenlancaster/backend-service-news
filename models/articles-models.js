@@ -27,10 +27,9 @@ fetchArticleById = (article_id) => {
       [article_id]
     )
     .then((result) => {
-      console.log(result);
-      if(result.rowCount === 0) {
-        return Promise.reject({status: 404, msg: "Article not found"});
-      } 
+      if (result.rowCount === 0) {
+        return Promise.reject({ status: 404, msg: "Article not found" });
+      }
       return result.rows[0];
     });
 };
