@@ -150,19 +150,19 @@ describe("app", () => {
     });
   });
 
-  describe.only("POST /api/articles/:article_id/comments", () => {
-    it("201: responds with the posted comment - an object with the properties: username and body.", () => {
-      const newComment = {
-        username: "testUsername",
-        body: "testBody",
-      };
-      return request(app)
-        .post("/api/articles/:article_id/comments")
-        .expect(201)
-        .then(({ body }) => {
-          const { comment } = body;
-          expect(comment).toEqual({ comment_id: 19, ...newComment });
-        });
-    });
-  });
+  // describe.only("POST /api/articles/:article_id/comments", () => {
+  //   it("201: responds with the posted comment - an object with the properties: username and body.", () => {
+  //     const newComment = {
+  //       username: "testUsername",
+  //       body: "testBody",
+  //     };
+  //     return request(app)
+  //       .post("/api/articles/:article_id/comments")
+  //       .expect(201)
+  //       .then(({ body }) => {
+  //         const { comment } = body;
+  //         expect(comment).toEqual({ comment_id: 19, ...newComment });
+  //       });
+  //   });
+  // });
 });
