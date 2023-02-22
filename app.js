@@ -6,6 +6,9 @@ const {
   sendArticleById,
 } = require("./controllers/articles-controllers");
 const {
+  sendCommentsByArticleId,
+} = require("./controllers/comments-controllers");
+const {
   handle404NonExistantPaths,
   handlePSQL400s,
   handleCustomErrors,
@@ -15,6 +18,7 @@ const {
 app.get("/api/topics", sendTopics);
 app.get("/api/articles", sendArticles);
 app.get("/api/articles/:article_id", sendArticleById);
+app.get("/api/articles/:article_id/comments", sendCommentsByArticleId);
 
 app.use(handle404NonExistantPaths);
 app.use(handlePSQL400s);
