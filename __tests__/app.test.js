@@ -282,4 +282,29 @@ describe("app", () => {
         });
     });
   });
+
+  describe("GET  /api/users", () => {
+    it("200: responds with an array of all the users objects containing the properties: username, name and avatar_url", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then(({ body }) => {
+          const { users } = body;
+
+          expect(users).toHaveLength(4);
+
+          users.forEach((user) => {
+            expect(user).toHaveProperty("username", expect.any(String));
+            expect(user).toHaveProperty("name", expect.any(String));
+            expect(user).toHaveProperty("avatar_url", expect.any(String));
+          });
+
+          expect(users[0]).toEqual({
+            username: "butter_bridge",
+            name: "jonny",
+            avatar_url: "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+          });
+        });
+    });
+  });
 });
