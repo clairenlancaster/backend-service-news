@@ -197,7 +197,7 @@ describe("app", () => {
   });
 
   describe("POST /api/articles/:article_id/comments", () => {
-    it("201: responds with the posted comment - an object with the properties: author (username) and body", () => {
+    it("201: responds with the posted comment when passed an object with the essential properties: author (username) and body", () => {
       const newComment = {
         author: "butter_bridge",
         body: "testBody",
@@ -208,6 +208,26 @@ describe("app", () => {
         .expect(201)
         .then(({ body }) => {
           const { comment } = body;
+          expect(comment.author).toBe("butter_bridge");
+          expect(comment.body).toBe("testBody");
+          expect(comment.article_id).toBe(1);
+        });
+    });
+    it("201: responds with the posted comment and ignores the non-essential properties in the object: created_at and votes", () => {
+      const newComment = {
+        author: "butter_bridge",
+        body: "testBody",
+        created_at: 1583025180000,
+        votes: 5
+      };
+      return request(app)
+        .post("/api/articles/1/comments")
+        .send(newComment)
+        .expect(201)
+        .then(({ body }) => {
+          const { comment } = body;
+          expect(comment.votes).toBe(0);
+
           expect(comment.author).toBe("butter_bridge");
           expect(comment.body).toBe("testBody");
           expect(comment.article_id).toBe(1);

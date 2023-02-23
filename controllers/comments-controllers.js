@@ -21,6 +21,7 @@ sendCommentsByArticleId = (request, response, next) => {
 };
 
 postComment = (request, response, next) => {
+
   const newComment = request.body;
   const { article_id } = request.params;
 
