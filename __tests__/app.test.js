@@ -218,7 +218,7 @@ describe("app", () => {
         author: "butter_bridge",
         body: "testBody",
         created_at: 1583025180000,
-        votes: 5
+        votes: 5,
       };
       return request(app)
         .post("/api/articles/1/comments")
@@ -279,6 +279,101 @@ describe("app", () => {
         .expect(404)
         .then(({ body }) => {
           expect(body.msg).toBe("User not found");
+        });
+    });
+  });
+
+  describe("PATCH /api/articles/:article_id", () => {
+    it("201: responds with the selected article's votes updated (increased) when passed an object with the key of inc_votes and a value that would increment the votes", () => {
+      const votesIncremented = {
+        inc_votes: 5,
+      };
+
+      return request(app)
+        .patch("/api/articles/1")
+        .send(votesIncremented)
+        .expect(201)
+        .then(({ body }) => {
+          const { updatedArticle } = body;
+          expect(updatedArticle.votes).toBe(105);
+          expect(updatedArticle.article_id).toBe(1);
+          expect(updatedArticle.author).toBe("butter_bridge");
+          expect(updatedArticle.title).toBe("Living in the shadow of a great man");
+          expect(updatedArticle.topic).toBe("mitch");
+          expect(updatedArticle.article_img_url).toBe(
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+          );
+          expect(updatedArticle).toHaveProperty("created_at", expect.any(String));
+        });
+    });
+    it("201: responds with the selected article's votes updated (increased) when passed an object with the key of inc_votes and a value that would increment the votes", () => {
+      const votesDecremented = {
+        inc_votes : -5,
+      }
+
+      return request(app)
+        .patch("/api/articles/1")
+        .send(votesDecremented)
+        .expect(201)
+        .then(({ body }) => {
+          const { updatedArticle } = body;
+          expect(updatedArticle.votes).toBe(95);
+          expect(updatedArticle.article_id).toBe(1);
+          expect(updatedArticle.author).toBe("butter_bridge");
+          expect(updatedArticle.title).toBe("Living in the shadow of a great man");
+          expect(updatedArticle.topic).toBe("mitch");
+          expect(updatedArticle.article_img_url).toBe(
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+          );
+          expect(updatedArticle).toHaveProperty("created_at", expect.any(String));
+        });
+    });
+    it("400: responds with a message of 'Bad request' when sent a patch request without a body", () => {
+      return request(app)
+        .patch("/api/articles/1")
+        .expect(400)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("Bad request");
+        });
+    });
+    it("400: responds with a message of 'Bad request' when sent a patch request without an invalid vote_inc value", () => {
+      const votesIncremented = {
+        inc_votes: "invalid-vote-increase",
+      };
+      return request(app)
+        .patch("/api/articles/1")
+        .expect(400)
+        .send(votesIncremented)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("Bad request");
+        });
+    });
+    it("400: responds with a message of 'Bad request' when sent a patch request for an invalid article_id", () => {
+      const votesIncremented = {
+        inc_votes : 5,
+      }
+
+      return request(app)
+        .patch("/api/articles/invalid-article")
+        .send(votesIncremented)
+        .expect(400)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("Bad request");
+        });
+    });
+    it("404: responds with a message of 'Article_id not found' when sent a patch request for an article_id that is valid but non-existent - cannot update votes for a non-existent article", () => {
+      const votesIncremented = {
+        inc_votes : 5,
+      }
+      return request(app)
+        .patch("/api/articles/25")
+        .send(votesIncremented)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Article not found");
         });
     });
   });
