@@ -9,7 +9,7 @@ beforeEach(() => {
 });
 
 afterAll(() => {
-  db.end();
+  return db.end();
 });
 
 describe("app", () => {
@@ -195,4 +195,6 @@ describe("app", () => {
         });
     });
   });
+
+
 });
