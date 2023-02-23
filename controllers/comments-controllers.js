@@ -20,10 +20,11 @@ sendCommentsByArticleId = (request, response, next) => {
     });
 };
 
-postComment = (request, response) => {
+postComment = (request, response, next) => {
   const newComment = request.body;
+  const { article_id } = request.params;
 
-  addComment(newComment)
+  addComment(newComment, article_id)
     .then((comment) => {
       response.status(201).send({ comment });
     })

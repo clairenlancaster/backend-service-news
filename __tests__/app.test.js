@@ -9,7 +9,7 @@ beforeEach(() => {
 });
 
 afterAll(() => {
-  db.end();
+  return db.end();
 });
 
 describe("app", () => {
@@ -196,19 +196,70 @@ describe("app", () => {
     });
   });
 
-  // describe.only("POST /api/articles/:article_id/comments", () => {
-  //   it("201: responds with the posted comment - an object with the properties: username and body.", () => {
-  //     const newComment = {
-  //       username: "testUsername",
-  //       body: "testBody",
-  //     };
-  //     return request(app)
-  //       .post("/api/articles/:article_id/comments")
-  //       .expect(201)
-  //       .then(({ body }) => {
-  //         const { comment } = body;
-  //         expect(comment).toEqual({ comment_id: 19, ...newComment });
-  //       });
-  //   });
-  // });
+  describe("POST /api/articles/:article_id/comments", () => {
+    it("201: responds with the posted comment - an object with the properties: author (username) and body", () => {
+      const newComment = {
+        author: "butter_bridge",
+        body: "testBody",
+      };
+      return request(app)
+        .post("/api/articles/1/comments")
+        .send(newComment)
+        .expect(201)
+        .then(({ body }) => {
+          const { comment } = body;
+          expect(comment.author).toBe("butter_bridge");
+          expect(comment.body).toBe("testBody");
+          expect(comment.article_id).toBe(1);
+        });
+    });
+    it("400: responds with a message of 'Bad request' when sent a post request without a body", () => {
+      return request(app)
+        .post("/api/articles/1/comments")
+        .expect(400)
+        .then((response) => {
+          const msg = response.body.msg;
+          expect(msg).toBe("Bad request");
+        });
+    });
+    it("400: responds with a message of 'Bad request' when sent a post request for an invalid article_id", () => {
+      const newComment = {
+        author: "butter_bridge",
+        body: "testBody",
+      };
+      return request(app)
+        .post("/api/articles/invalid-article/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Bad request");
+        });
+    });
+    it("404: responds with a message of 'Article_id not found' when sent a post request for an article_id that is valid but non-existent - cannot attach comment to a non-existent article", () => {
+      const newComment = {
+        author: "butter_bridge",
+        body: "testBody",
+      };
+      return request(app)
+        .post("/api/articles/25/comments")
+        .send(newComment)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Article_id not found");
+        });
+    });
+    it("404: responds with a message of 'User not found' when sent a post request with a username that is not valid - user does not exist on users' table", () => {
+      const newComment = {
+        author: "non-existent-user",
+        body: "testBody",
+      };
+      return request(app)
+        .post("/api/articles/1/comments")
+        .send(newComment)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("User not found");
+        });
+    });
+  });
 });

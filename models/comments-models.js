@@ -9,19 +9,26 @@ fetchCommentsByArticleId = (article_id) => {
   });
 };
 
-addComment = (newComment) => {
-  const { username, body } = newComment;
+addComment = (newComment, article_id) => {
+  const { author, body } = newComment;
+
+  if (!author || !body) {
+    return Promise.reject({
+      status: 400,
+      msg: "Bad request",
+    });
+  }
 
   return db
     .query(
       `
     INSERT INTO comments
-      (username, body)
+      (author, body, article_id)
     VALUES
-      ($1, $2)
+      ($1, $2, $3)
     RETURNING *
     `,
-      [username, body]
+      [author, body, article_id]
     )
     .then(({ rows }) => {
       return rows[0];
