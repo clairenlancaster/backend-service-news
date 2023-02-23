@@ -34,4 +34,30 @@ fetchArticleById = (article_id) => {
     });
 };
 
-module.exports = { fetchArticles, fetchArticleById };
+updateArticleVotes = (article_id, inc_votes) => {
+  if (!inc_votes) {
+    return Promise.reject({
+      status: 400,
+      msg: "Bad request",
+    });
+  }
+
+  return db
+    .query(
+      `
+      UPDATE articles
+      SET votes = votes + $1
+      WHERE article_id = $2
+      RETURNING *
+    `,
+      [inc_votes, article_id]
+    )
+    .then((result) => {
+      if (result.rowCount === 0) {
+        return Promise.reject({ status: 404, msg: "Article not found" });
+      }
+      return result.rows[0];
+    });
+};
+
+module.exports = { fetchArticles, fetchArticleById, updateArticleVotes };
