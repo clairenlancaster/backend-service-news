@@ -1,4 +1,7 @@
-const { fetchCommentsByArticleId } = require("../models/comments-models");
+const {
+  fetchCommentsByArticleId,
+  addComment,
+} = require("../models/comments-models");
 const { fetchArticleById } = require("../models/articles-models");
 
 sendCommentsByArticleId = (request, response, next) => {
@@ -17,4 +20,18 @@ sendCommentsByArticleId = (request, response, next) => {
     });
 };
 
-module.exports = { sendCommentsByArticleId };
+postComment = (request, response, next) => {
+
+  const newComment = request.body;
+  const { article_id } = request.params;
+
+  addComment(newComment, article_id)
+    .then((comment) => {
+      response.status(201).send({ comment });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
+module.exports = { sendCommentsByArticleId, postComment };
