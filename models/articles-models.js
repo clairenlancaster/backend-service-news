@@ -1,14 +1,83 @@
 const db = require("../db/connection.js");
 
-fetchArticles = () => {
-  const queryString = `
+fetchArticles = (topic, sort_by, order) => {
+  const validTopicByOptions = ["mitch", "cats", "paper"];
+  const parsedTopic = parseInt(topic);
+  if (topic && !Number.isNaN(parsedTopic)) {
+    return Promise.reject({
+      status: 400,
+      msg: "Bad request",
+    });
+  } else if (topic && !validTopicByOptions.includes(topic)) {
+    return Promise.reject({
+      status: 404,
+      msg: "Not found",
+    });
+  }
+
+  const validSortByOptions = [
+    "author",
+    "title",
+    "article_id",
+    "votes",
+    "comment_count",
+  ];
+  const parsedSortBy = parseInt(sort_by);
+  if (sort_by && !Number.isNaN(parsedSortBy)) {
+    return Promise.reject({
+      status: 400,
+      msg: "Bad request",
+    });
+  } else if (sort_by && !validSortByOptions.includes(sort_by)) {
+    return Promise.reject({
+      status: 404,
+      msg: "Not able to sort",
+    });
+  }
+
+  const validOrderByOptions = ["ascending", "descending"];
+  const parsedOrder = parseInt(order);
+  if (order && !Number.isNaN(parsedOrder)) {
+    return Promise.reject({
+      status: 400,
+      msg: "Bad request",
+    });
+  } else if (order && !validOrderByOptions.includes(order)) {
+    return Promise.reject({
+      status: 404,
+      msg: "Not able to order",
+    });
+  }
+
+  let queryString = `
   SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, CAST(COUNT(comments.article_id) AS int) AS comment_count
   FROM articles
   LEFT JOIN comments
   ON comments.article_id = articles.article_id
-  GROUP BY articles.article_id
-  ORDER BY articles.created_at DESC
   `;
+
+  if (topic) {
+    queryString += `
+  WHERE articles.topic = '${topic}'
+  `;
+  }
+  queryString += `
+  GROUP BY articles.article_id
+  `;
+
+  let orderArticlesBy = "DESC";
+
+  if (order === "descending") {
+    orderArticlesBy = "DESC";
+  } else if (order === "ascending") {
+    orderArticlesBy = "ASC";
+  }
+
+  if (sort_by) {
+    queryString += `ORDER BY ${sort_by} ${orderArticlesBy}`;
+  } else {
+    queryString += `ORDER BY created_at ${orderArticlesBy}`;
+  }
 
   return db.query(queryString).then((result) => {
     const articles = result.rows;
