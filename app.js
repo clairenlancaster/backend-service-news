@@ -6,9 +6,10 @@ const {
   sendArticleById,
   patchArticleVotes,
 } = require("./controllers/articles-controllers");
-const { postComment } = require("./controllers/comments-controllers");
 const {
+  postComment,
   sendCommentsByArticleId,
+  deleteComment,
 } = require("./controllers/comments-controllers");
 const { sendUsers } = require("./controllers/users-controllers");
 const {
@@ -29,6 +30,8 @@ app.get("/api/users", sendUsers);
 app.post("/api/articles/:article_id/comments", postComment);
 
 app.patch("/api/articles/:article_id", patchArticleVotes);
+
+app.delete("/api/comments/:comment_id", deleteComment);
 
 app.use(handle404NonExistantPaths);
 app.use(handlePSQL400s);
