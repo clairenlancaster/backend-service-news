@@ -8,8 +8,7 @@
     "seed": "node ./db/seeds/run-seed.js",
     "test": "jest",
     "prepare": "husky install",
-    "playground": "psql -f ./playground/playground.sql", 
-    "see-tables": "psql -f app.test.js > example.txt"
+    "playground": "psql -f ./db/playground.sql"
   },
   "repository": {
     "type": "git",
