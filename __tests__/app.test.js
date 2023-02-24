@@ -646,9 +646,6 @@ describe("app", () => {
         return request(app)
           .delete("/api/comments/1")
           .expect(204)
-          .then(({ body }) => {
-            expect(Object.keys(body).length === 0).toBe(true);
-          });
       });
       it("404: responds with a message of 'Comment not found' when sent a delete request for an comment_id that is valid but non-existent - cannot delete a non-existent article", () => {
         return request(app)

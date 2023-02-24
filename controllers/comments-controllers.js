@@ -38,8 +38,8 @@ deleteComment = (request, response, next) => {
   const { comment_id } = request.params;
 
   removeComment(comment_id)
-    .then((comment) => {
-      response.status(204).send({ comment });
+    .then(() => {
+      response.status(204).send();
     })
     .catch((error) => {
       next(error);
