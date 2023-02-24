@@ -1,5 +1,8 @@
 const express = require("express");
 const app = express();
+const {
+  sendAvailableEndpoints,
+} = require("./controllers/endpoints-controllers");
 const { sendTopics } = require("./controllers/topics-controllers");
 const {
   sendArticles,
@@ -19,7 +22,7 @@ const {
 } = require("./errors/error-handling");
 
 app.use(express.json());
-
+app.get("/api", sendAvailableEndpoints);
 app.get("/api/topics", sendTopics);
 app.get("/api/articles", sendArticles);
 app.get("/api/articles/:article_id", sendArticleById);
