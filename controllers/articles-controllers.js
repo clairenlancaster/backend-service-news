@@ -5,7 +5,9 @@ const {
 } = require("../models/articles-models");
 
 sendArticles = (request, response, next) => {
-  fetchArticles()
+  const { topic, sort_by, order } = request.query;
+
+  fetchArticles(topic, sort_by, order)
     .then((articles) => response.status(200).send({ articles }))
     .catch((error) => {
       next(error);
@@ -29,7 +31,7 @@ patchArticleVotes = (request, response, next) => {
 
   updateArticleVotes(article_id, inc_votes)
     .then((updatedArticle) => {
-      response.status(201).send({ updatedArticle });
+      response.status(200).send({ updatedArticle });
     })
     .catch((error) => {
       next(error);
