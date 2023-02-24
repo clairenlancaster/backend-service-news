@@ -393,30 +393,27 @@ describe("app", () => {
       });
     });
 
-    describe("GET /api/articles/:article_id", () => {
-      it("200: returns an article object with the properties: author, title, article_id, body, topic, created_at, votes and article_img_url", () => {
-        return request(app)
-          .get("/api/articles/1")
-          .expect(200)
-          .then(({ body }) => {
-            const { articles } = body;
-            expect(typeof articles).toBe("object");
-
-            expect(articles).toHaveProperty("author", expect.any(String));
-            expect(articles).toHaveProperty("title", expect.any(String));
-            expect(articles).toHaveProperty("article_id", expect.any(Number));
-            expect(articles).toHaveProperty("topic", expect.any(String));
-            expect(articles).toHaveProperty("created_at", expect.any(String));
-            expect(articles).toHaveProperty("votes", expect.any(Number));
-            expect(articles).toHaveProperty(
-              "article_img_url",
-              expect.any(String)
-            );
+  describe("GET /api/articles/:article_id", () => {
+      it("200: returns an article object with the properties: author, title, article_id, body, topic, created_at, votes, comment_count and article_img_url", () => {
+      return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then(({ body }) => {
+          const { articles } = body;
+          expect(typeof articles).toBe("object");
 
             expect(articles.author).toBe("butter_bridge");
             expect(articles.title).toBe("Living in the shadow of a great man");
             expect(articles.votes).toBe(100);
-          });
+            expect(articles.article_id).toBe(1);
+            expect(articles.comment_count).toBe(11);
+            expect(articles.topic).toBe("mitch");
+            expect(articles).toHaveProperty("created_at", expect.any(String));
+            expect(articles).toHaveProperty(
+              "article_img_url",
+              expect.any(String)
+            );
+        });
       });
       it("400: responds with a message of 'Bad request' when sent an invalid article_id", () => {
         return request(app)
@@ -541,13 +538,13 @@ describe("app", () => {
       });
     });
 
-    describe("GET /api/articles/:article_id/comments", () => {
-      it("200: returns an array of comments for the given article_id - each comment should have the properties: comment_id, votes, created_at, author, body and article_id", () => {
-        return request(app)
-          .get("/api/articles/1/comments")
-          .expect(200)
-          .then(({ body }) => {
-            const { comments } = body;
+  describe("GET /api/articles/:article_id/comments", () => {
+    it("200: returns an array of comments for the given article_id - each comment should have the properties: comment_id, votes, created_at, author, body,article_id and comment_count", () => {
+      return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then(({ body }) => {
+          const { comments } = body;
 
             expect(comments).toHaveLength(11);
 
