@@ -14,7 +14,7 @@ afterAll(() => {
 });
 
 describe("app", () => {
-  describe("server errors", () => {
+  describe("Server errors", () => {
     it("404: responds with a message 'Path not found' when sent a valid but non-existent path", () => {
       return request(app)
         .get("/not-an-existing-path")
@@ -26,7 +26,7 @@ describe("app", () => {
     });
   });
 
-  describe.only("GET /api", () => {
+  describe("GET /api", () => {
     it("responds with all the available endpoints on the API", () => {
       return request(app)
         .get("/api")
@@ -58,33 +58,35 @@ describe("app", () => {
     });
   });
 
-  describe("GET  /api/users", () => {
-    it("200: responds with an array of all the users objects containing the properties: username, name and avatar_url", () => {
-      return request(app)
-        .get("/api/users")
-        .expect(200)
-        .then(({ body }) => {
-          const { users } = body;
+  describe("Endpoint: /api/users", () => {
+    describe("GET  /api/users", () => {
+      it("200: responds with an array of all the users objects containing the properties: username, name and avatar_url", () => {
+        return request(app)
+          .get("/api/users")
+          .expect(200)
+          .then(({ body }) => {
+            const { users } = body;
 
-          expect(users).toHaveLength(4);
+            expect(users).toHaveLength(4);
 
-          users.forEach((user) => {
-            expect(user).toHaveProperty("username", expect.any(String));
-            expect(user).toHaveProperty("name", expect.any(String));
-            expect(user).toHaveProperty("avatar_url", expect.any(String));
+            users.forEach((user) => {
+              expect(user).toHaveProperty("username", expect.any(String));
+              expect(user).toHaveProperty("name", expect.any(String));
+              expect(user).toHaveProperty("avatar_url", expect.any(String));
+            });
+
+            expect(users[0]).toEqual({
+              username: "butter_bridge",
+              name: "jonny",
+              avatar_url:
+                "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
+            });
           });
-
-          expect(users[0]).toEqual({
-            username: "butter_bridge",
-            name: "jonny",
-            avatar_url:
-              "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
-          });
-        });
+      });
     });
   });
 
-  describe("GET /api/articles", () => {
+  describe("Endpoint: /api/articles", () => {
     describe("GET /api/articles", () => {
       it("200: responds with an array of all the article objects containing the properties: author, title, article_id, topic, created_at, votes, article_img_url, comment_count", () => {
         return request(app)
@@ -476,7 +478,7 @@ describe("app", () => {
             expect(msg).toBe("Bad request");
           });
       });
-      it("400: responds with a message of 'Bad request' when sent a patch request without an invalid vote_inc value", () => {
+      it("400: responds with a message of 'Bad request' when sent a patch request without an valid vote_inc value", () => {
         const votesIncremented = {
           inc_votes: "invalid-vote-increase",
         };
@@ -646,6 +648,30 @@ describe("app", () => {
           .expect(404)
           .then(({ body }) => {
             expect(body.msg).toBe("User not found");
+          });
+      });
+    });
+  });
+
+  describe("Endpoint: /api/comments", () => {
+    describe("DELETE /api/comments/:comment_id", () => {
+      it("204: responds with no content when sent a request to delete a comment with a specific comment_id", () => {
+        return request(app).delete("/api/comments/1").expect(204);
+      });
+      it("404: responds with a message of 'Comment not found' when sent a delete request for an comment_id that is valid but non-existent - cannot delete a non-existent article", () => {
+        return request(app)
+          .delete("/api/comments/100")
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("Comment not found");
+          });
+      });
+      it("400: responds with a message of 'Bad request' when sent a delete request for an invalid comment_id", () => {
+        return request(app)
+          .delete("/api/comments/invalid-comment_id")
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe("Bad request");
           });
       });
     });
