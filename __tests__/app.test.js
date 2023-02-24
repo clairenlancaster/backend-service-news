@@ -3,6 +3,7 @@ const app = require("../app");
 const seed = require("../db/seeds/seed");
 const db = require("../db/connection");
 const testData = require("../db/data/test-data/index");
+const testForEndpoints = require("../endpoints.json");
 
 beforeEach(() => {
   return seed(testData);
@@ -25,33 +26,19 @@ describe("app", () => {
     });
   });
 
-  // describe.only("GET /api", () => {
-  //   it("responds with all the available endpoints on the API", () => {
-  //     return request(app)
-  //       .get("/api")
-  //       .expect(200)
-  //       .then(({ body }) => {
-  //         console.log(body);
-  //         const { endpoints } = body;
+  describe.only("GET /api", () => {
+    it("responds with all the available endpoints on the API", () => {
+      return request(app)
+        .get("/api")
+        .expect(200)
+        .then(({ body }) => {
+          const { endpoints } = body;
 
-  //         expect(Object.keys(endpoints).length).toBe(9);
-
-  //         expect(endpoints).toHaveProperty("GET /api");
-  //         expect(endpoints).toHaveProperty("GET /api/topics");
-  //         expect(endpoints).toHaveProperty("GET /api/users");
-  //         expect(endpoints).toHaveProperty("GET /api/articles");
-  //         expect(endpoints).toHaveProperty("GET /api/articles/:article_id");
-  //         expect(endpoints).toHaveProperty("PATCH /api/articles/:article_id");
-  //         expect(endpoints).toHaveProperty(
-  //           "GET /api/articles/:article_id/comments"
-  //         );
-  //         expect(endpoints).toHaveProperty(
-  //           "POST /api/articles/:article_id/comments"
-  //         );
-  //         expect(endpoints).toHaveProperty("DELETE /api/comments/:comment_id");
-  //       });
-  //   });
-  // });
+          expect(endpoints).toEqual(testForEndpoints);
+          expect(Object.keys(endpoints).length).toBe(9);
+        });
+    });
+  });
 
   describe("GET /api/topics", () => {
     it("200: responds with an array of all the topic objects containing the properties: slug and description", () => {

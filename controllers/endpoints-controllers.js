@@ -1,13 +1,7 @@
-const { fetchAvailableEndpoints } = require("../models/endpoints-models");
+const endpoints = require("../endpoints.json");
 
 sendAvailableEndpoints = (request, response, next) => {
-  fetchAvailableEndpoints()
-    .then((endpoints) => {
-      response.status(200).send({ endpoints });
-    })
-    .catch((error) => {
-      next(error);
-    });
+  response.status(200).send({ endpoints });
 };
 
 module.exports = { sendAvailableEndpoints };
