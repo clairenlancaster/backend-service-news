@@ -10,6 +10,7 @@ const { postComment } = require("./controllers/comments-controllers");
 const {
   sendCommentsByArticleId,
 } = require("./controllers/comments-controllers");
+const { sendUsers } = require("./controllers/users-controllers");
 const {
   handle404NonExistantPaths,
   handlePSQL400s,
@@ -23,6 +24,7 @@ app.get("/api/topics", sendTopics);
 app.get("/api/articles", sendArticles);
 app.get("/api/articles/:article_id", sendArticleById);
 app.get("/api/articles/:article_id/comments", sendCommentsByArticleId);
+app.get("/api/users", sendUsers);
 
 app.post("/api/articles/:article_id/comments", postComment);
 
