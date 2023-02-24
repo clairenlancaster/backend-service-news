@@ -200,10 +200,10 @@ describe("app", () => {
         //     });
         // });
       });
-      it("400: if invalid topic query provided - responds with a message of 'Bad request'", () => {
+      it("404: if invalid topic query provided - responds with a message of 'Bad request'", () => {
         return request(app)
           .get("/api/articles?topic=invalid")
-          .expect(400)
+          .expect(404)
           .then(({ body }) => {
             expect(body.msg).toBe("Bad request");
           });

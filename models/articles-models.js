@@ -4,7 +4,7 @@ fetchArticles = (topic, sort_by, order) => {
   const validTopicByOptions = ["mitch", "cats", "paper"];
   if (topic && !validTopicByOptions.includes(topic)) {
     return Promise.reject({
-      status: 400,
+      status: 404,
       msg: "Bad request",
     });
   }
