@@ -163,42 +163,6 @@ describe("app", () => {
               );
             });
           });
-        // it("400: if invalid topic query provided - responds with a message of 'Bad request'", () => {
-        //   return request(app)
-        //     .get("/api/articles")
-        //     .expect(200)
-        //     .then(({ body }) => {
-        //       const { articles } = body;
-
-        //       expect(articles).toHaveLength(12);
-
-        //       const articlesCopy = [...articles];
-        //       const dateOrderedArticles = articlesCopy.sort(
-        //         (articleA, articleB) => {
-        //           return articleB.created_at - articleA.created_at;
-        //         }
-        //       );
-        //       expect(articles).toEqual(dateOrderedArticles);
-        //     });
-        // });
-        // it("404: if valid but non-existent topic query provided - responds with a message of 'Bad request'", () => {
-        //   return request(app)
-        //     .get("/api/articles")
-        //     .expect(200)
-        //     .then(({ body }) => {
-        //       const { articles } = body;
-
-        //       expect(articles).toHaveLength(12);
-
-        //       const articlesCopy = [...articles];
-        //       const dateOrderedArticles = articlesCopy.sort(
-        //         (articleA, articleB) => {
-        //           return articleB.created_at - articleA.created_at;
-        //         }
-        //       );
-        //       expect(articles).toEqual(dateOrderedArticles);
-        //     });
-        // });
       });
       it("404: if invalid topic query provided - responds with a message of 'Bad request'", () => {
         return request(app)
