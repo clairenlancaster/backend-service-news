@@ -357,7 +357,7 @@ describe("app", () => {
       });
     });
 
-  describe("GET /api/articles/:article_id", () => {
+    describe("GET /api/articles/:article_id", () => {
       it("200: returns an article object with the properties: author, title, article_id, body, topic, created_at, votes, comment_count and article_img_url", () => {
       return request(app)
         .get("/api/articles/1")
@@ -502,8 +502,8 @@ describe("app", () => {
       });
     });
 
-  describe("GET /api/articles/:article_id/comments", () => {
-    it("200: returns an array of comments for the given article_id - each comment should have the properties: comment_id, votes, created_at, author, body,article_id and comment_count", () => {
+    describe("GET /api/articles/:article_id/comments", () => {
+      it("200: returns an array of comments for the given article_id - each comment should have the properties: comment_id, votes, created_at, author, body,article_id and comment_count", () => {
       return request(app)
         .get("/api/articles/1/comments")
         .expect(200)

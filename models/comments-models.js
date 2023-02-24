@@ -10,7 +10,7 @@ fetchCommentsByArticleId = (article_id) => {
 };
 
 addComment = (newComment, article_id) => {
-  const { author, body} = newComment;
+  const { author, body } = newComment;
 
   if (!author || !body) {
     return Promise.reject({
