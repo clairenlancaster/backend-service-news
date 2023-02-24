@@ -202,18 +202,10 @@ describe("app", () => {
       });
       it("400: if invalid topic query provided - responds with a message of 'Bad request'", () => {
         return request(app)
-          .get("/api/articles?topic=42")
+          .get("/api/articles?topic=invalid")
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).toBe("Bad request");
-          });
-      });
-      it("404: if valid but non-existent topic query provided - responds with a message of 'Not found'", () => {
-        return request(app)
-          .get("/api/articles?topic=valid-but-non-existent")
-          .expect(404)
-          .then(({ body }) => {
-            expect(body.msg).toBe("Not found");
           });
       });
     });
@@ -346,18 +338,10 @@ describe("app", () => {
       });
       it("400: responds with 'Bad request' when sent a sort_by query with an invalid value", () => {
         return request(app)
-          .get("/api/articles?sort_by=42")
+          .get("/api/articles?sort_by=invalid")
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).toBe("Bad request");
-          });
-      });
-      it("404: responds with 'Not able to sort' when sent a sort_by query with a valid but non-existent value", () => {
-        return request(app)
-          .get("/api/articles?sort_by=valid-but-non-existent")
-          .expect(404)
-          .then(({ body }) => {
-            expect(body.msg).toBe("Not able to sort");
           });
       });
     });
@@ -401,18 +385,10 @@ describe("app", () => {
       });
       it("400: responds with 'Bad request' when sent a order query with an invalid value", () => {
         return request(app)
-          .get("/api/articles?order=42")
+          .get("/api/articles?order=invalid")
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).toBe("Bad request");
-          });
-      });
-      it("404: responds with 'Not able order' when sent a order query with an valid but non-existent value", () => {
-        return request(app)
-          .get("/api/articles?order=valid-but-non-existent")
-          .expect(404)
-          .then(({ body }) => {
-            expect(body.msg).toBe("Not able to order");
           });
       });
     });

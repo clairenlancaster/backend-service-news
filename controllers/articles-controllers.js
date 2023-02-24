@@ -6,7 +6,6 @@ const {
 
 sendArticles = (request, response, next) => {
   const { topic, sort_by, order } = request.query;
-  // console.log(sort_by);
 
   fetchArticles(topic, sort_by, order)
     .then((articles) => response.status(200).send({ articles }))

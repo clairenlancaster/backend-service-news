@@ -2,16 +2,10 @@ const db = require("../db/connection.js");
 
 fetchArticles = (topic, sort_by, order) => {
   const validTopicByOptions = ["mitch", "cats", "paper"];
-  const parsedTopic = parseInt(topic);
-  if (topic && !Number.isNaN(parsedTopic)) {
+  if (topic && !validTopicByOptions.includes(topic)) {
     return Promise.reject({
       status: 400,
       msg: "Bad request",
-    });
-  } else if (topic && !validTopicByOptions.includes(topic)) {
-    return Promise.reject({
-      status: 404,
-      msg: "Not found",
     });
   }
 
@@ -22,30 +16,18 @@ fetchArticles = (topic, sort_by, order) => {
     "votes",
     "comment_count",
   ];
-  const parsedSortBy = parseInt(sort_by);
-  if (sort_by && !Number.isNaN(parsedSortBy)) {
+  if (sort_by && !validSortByOptions.includes(sort_by)) {
     return Promise.reject({
       status: 400,
       msg: "Bad request",
-    });
-  } else if (sort_by && !validSortByOptions.includes(sort_by)) {
-    return Promise.reject({
-      status: 404,
-      msg: "Not able to sort",
     });
   }
 
   const validOrderByOptions = ["ascending", "descending"];
-  const parsedOrder = parseInt(order);
-  if (order && !Number.isNaN(parsedOrder)) {
+  if (order && !validOrderByOptions.includes(order)) {
     return Promise.reject({
       status: 400,
       msg: "Bad request",
-    });
-  } else if (order && !validOrderByOptions.includes(order)) {
-    return Promise.reject({
-      status: 404,
-      msg: "Not able to order",
     });
   }
 
@@ -56,11 +38,14 @@ fetchArticles = (topic, sort_by, order) => {
   ON comments.article_id = articles.article_id
   `;
 
+  let queryParams = [];
   if (topic) {
     queryString += `
-  WHERE articles.topic = '${topic}'
+  WHERE articles.topic = $1
   `;
+    queryParams.push(topic);
   }
+
   queryString += `
   GROUP BY articles.article_id
   `;
@@ -79,7 +64,7 @@ fetchArticles = (topic, sort_by, order) => {
     queryString += `ORDER BY created_at ${orderArticlesBy}`;
   }
 
-  return db.query(queryString).then((result) => {
+  return db.query(queryString, queryParams).then((result) => {
     const articles = result.rows;
     return articles;
   });
