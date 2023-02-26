@@ -3,6 +3,7 @@ const app = require("../app");
 const seed = require("../db/seeds/seed");
 const db = require("../db/connection");
 const testData = require("../db/data/test-data/index");
+const testForEndpoints = require("../endpoints.json");
 
 beforeEach(() => {
   return seed(testData);
@@ -25,23 +26,35 @@ describe("app", () => {
     });
   });
 
-  describe("Endpoint: /api/topics", () => {
-    describe("GET /api/topics", () => {
-      it("200: responds with an array of all the topic objects containing the properties: slug and description", () => {
-        return request(app)
-          .get("/api/topics")
-          .expect(200)
-          .then(({ body }) => {
-            const { topics } = body;
+  describe("GET /api", () => {
+    it("responds with all the available endpoints on the API", () => {
+      return request(app)
+        .get("/api")
+        .expect(200)
+        .then(({ body }) => {
+          const { endpoints } = body;
 
-            expect(topics).toHaveLength(3);
+          expect(endpoints).toEqual(testForEndpoints);
+          expect(Object.keys(endpoints).length).toBe(9);
+        });
+    });
+  });
 
-            topics.forEach((topic) => {
-              expect(topic).toHaveProperty("description", expect.any(String));
-              expect(topic).toHaveProperty("slug", expect.any(String));
-            });
+  describe("GET /api/topics", () => {
+    it("200: responds with an array of all the topic objects containing the properties: slug and description", () => {
+      return request(app)
+        .get("/api/topics")
+        .expect(200)
+        .then(({ body }) => {
+          const { topics } = body;
+
+          expect(topics).toHaveLength(3);
+
+          topics.forEach((topic) => {
+            expect(topic).toHaveProperty("description", expect.any(String));
+            expect(topic).toHaveProperty("slug", expect.any(String));
           });
-      });
+        });
     });
   });
 
@@ -643,9 +656,7 @@ describe("app", () => {
   describe("Endpoint: /api/comments", () => {
     describe("DELETE /api/comments/:comment_id", () => {
       it("204: responds with no content when sent a request to delete a comment with a specific comment_id", () => {
-        return request(app)
-          .delete("/api/comments/1")
-          .expect(204)
+        return request(app).delete("/api/comments/1").expect(204);
       });
       it("404: responds with a message of 'Comment not found' when sent a delete request for an comment_id that is valid but non-existent - cannot delete a non-existent article", () => {
         return request(app)
