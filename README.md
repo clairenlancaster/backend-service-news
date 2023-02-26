@@ -1,23 +1,31 @@
 # Northcoders News API
 
-**Link to hosted version:**
+Link to hosted version:
 ## Project Summary:
 ---
 ## Instructions:
+If you wish to clone this project and run it locally, follow the instructions below:
+
 ### 1. Clone Repository:
-1. In the File menu, click Clone Repository.
-2. Click the tab that corresponds to the location of the repository you want to clone. You can also click URL to manually enter the repository location.
-3.
+1. In this repository, use the <code><>Code</code> button to access and copy its url.
+2. In your terminal, use <code>git clone</code> followed by the repository's url.
+3. Open up the folder in you preferred IDE.
+
 ### 2. Install Dependencies:
+- Run <code>npm install</code> to install all dependencies.
+- See the package.json file for an overview of all dependencies used.
 
 ### 3. Create .env Files:
-If you wished to clone this project and run locally:
-
-1. You will need to create two .env files to connect to the two databases locally. Create two .env files: .env.test and .env.development. Into each, add PGDATABASE=<database_name_here>, with the correct database name for that environment (see /db/setup.sql for the database names). 
-2. Double check that these .env files are .gitignored.
+1. You will need to create two <code>.env</code> files to connect to the two databases locally: <code>.env.test</code> and <code>.env.development</code>. 
+2. Into each, add <code>PGDATABASE=<database_name_here></code>, with the correct database name for that environment - see <code>/db/setup.sql</code> for the database names. 
+2. Double check that these <code>.env</code> files are <code>.gitignored</code>.
 ### 4. Seed Local Database:
+1. Run <code>npm run setup-dbs</code>.
+2. Run <code>npm run seed</code>.
 ### 5. Run Tests:
+- Integration tests: run <code>npm test app.test.js</code>.
+- Unit tests for the seeding utility functions: run <code>npm test utils.test.js</code>.
 ---
 ## Version Requirements:
-* **Node.js**:
-* **Postgres**:
+* Node.js:
+* Postgres:
