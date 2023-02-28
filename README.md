@@ -43,5 +43,5 @@ If you wish to clone this project and run it locally, follow the instructions be
 
 ## Version Requirements:
 
-- Node.js:
-- Postgres:
+- Node.js: v19.2.0
+- Postgres: v14.6
