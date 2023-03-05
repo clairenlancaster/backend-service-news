@@ -35,7 +35,7 @@ describe('app', () => {
           const { endpoints } = body;
 
           expect(endpoints).toEqual(testForEndpoints);
-          expect(Object.keys(endpoints).length).toBe(9);
+          expect(Object.keys(endpoints).length).toBe(14);
         });
     });
   });
