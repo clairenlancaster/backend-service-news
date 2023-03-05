@@ -681,7 +681,7 @@ describe('app', () => {
       });
     });
 
-    describe.only('DELETE /api/articles/:article_id', () => {
+    describe('DELETE /api/articles/:article_id', () => {
       it('204: responds with no content when sent a request to delete an article with a specific article_id', () => {
         return request(app).delete('/api/articles/1').expect(204);
       });
