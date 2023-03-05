@@ -2,8 +2,9 @@ const {
   fetchCommentsByArticleId,
   addComment,
   removeComment,
-} = require("../models/comments-models");
-const { fetchArticleById } = require("../models/articles-models");
+  updateCommentVotes,
+} = require('../models/comments-models');
+const { fetchArticleById } = require('../models/articles-models');
 
 sendCommentsByArticleId = (request, response, next) => {
   const { article_id } = request.params;
@@ -46,4 +47,22 @@ deleteComment = (request, response, next) => {
     });
 };
 
-module.exports = { sendCommentsByArticleId, postComment, deleteComment };
+patchCommentVotes = (request, response, next) => {
+  const { comment_id } = request.params;
+  const { inc_votes } = request.body;
+
+  updateCommentVotes(comment_id, inc_votes)
+    .then((updatedComment) => {
+      response.status(200).send({ updatedComment });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
+module.exports = {
+  sendCommentsByArticleId,
+  postComment,
+  deleteComment,
+  patchCommentVotes,
+};

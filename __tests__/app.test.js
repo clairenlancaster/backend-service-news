@@ -468,7 +468,7 @@ describe('app', () => {
             );
           });
       });
-      it("200: responds with the selected article's votes updated (increased) when passed an object with the key of inc_votes and a value that would increment the votes", () => {
+      it("200: responds with the selected article's votes updated (decreased) when passed an object with the key of inc_votes and a value that would decrement the votes", () => {
         const votesDecremented = {
           inc_votes: -5,
         };
@@ -698,6 +698,100 @@ describe('app', () => {
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).toBe('Bad request');
+          });
+      });
+    });
+    describe('PATCH /api/comments/:comment_id', () => {
+      it("200: responds with the selected comments's votes updated (increased) when passed an object with the key of inc_votes and a value that would increment the votes", () => {
+        const votesIncremented = {
+          inc_votes: 1,
+        };
+
+        return request(app)
+          .patch('/api/comments/1')
+          .send(votesIncremented)
+          .expect(200)
+          .then(({ body }) => {
+            const { updatedComment } = body;
+
+            expect(updatedComment.comment_id).toBe(1);
+            expect(updatedComment.votes).toBe(17);
+            expect(updatedComment.author).toBe('butter_bridge');
+            expect(updatedComment.body).toBe(
+              "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!"
+            );
+            expect(updatedComment.article_id).toBe(9);
+            expect(updatedComment).toHaveProperty;
+          });
+      });
+      it("200: responds with the selected comments's votes updated (decreased) when passed an object with the key of inc_votes and a value that would decrement the votes", () => {
+        const votesDecremented = {
+          inc_votes: -1,
+        };
+
+        return request(app)
+          .patch('/api/comments/1')
+          .send(votesDecremented)
+          .expect(200)
+          .then(({ body }) => {
+            const { updatedComment } = body;
+
+            expect(updatedComment.comment_id).toBe(1);
+            expect(updatedComment.votes).toBe(15);
+            expect(updatedComment.author).toBe('butter_bridge');
+            expect(updatedComment.body).toBe(
+              "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!"
+            );
+            expect(updatedComment.article_id).toBe(9);
+            expect(updatedComment).toHaveProperty;
+          });
+      });
+      it("400: responds with a message of 'Bad request' when sent a patch request without a body", () => {
+        return request(app)
+          .patch('/api/comments/1')
+          .expect(400)
+          .then((response) => {
+            const msg = response.body.msg;
+            expect(msg).toBe('Bad request');
+          });
+      });
+      it("400: responds with a message of 'Bad request' when sent a patch request without an valid vote_inc value", () => {
+        const votesIncremented = {
+          inc_votes: 'invalid-vote-increase',
+        };
+        return request(app)
+          .patch('/api/comments/1')
+          .expect(400)
+          .send(votesIncremented)
+          .then((response) => {
+            const msg = response.body.msg;
+            expect(msg).toBe('Bad request');
+          });
+      });
+      it("400: responds with a message of 'Bad request' when sent a patch request for an invalid comment_id", () => {
+        const votesIncremented = {
+          inc_votes: 1,
+        };
+
+        return request(app)
+          .patch('/api/comments/invalid-comment')
+          .send(votesIncremented)
+          .expect(400)
+          .then((response) => {
+            const msg = response.body.msg;
+            expect(msg).toBe('Bad request');
+          });
+      });
+      it("404: responds with a message of 'Comment_id not found' when sent a patch request for an comment_id that is valid but non-existent - cannot update votes for a non-existent comment", () => {
+        const votesIncremented = {
+          inc_votes: 1,
+        };
+        return request(app)
+          .patch('/api/comments/1065')
+          .send(votesIncremented)
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe('Comment not found');
           });
       });
     });

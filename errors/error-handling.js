@@ -1,14 +1,14 @@
 function handle404NonExistantPaths(request, response, next) {
-  response.status(404).send({ msg: "Path not found" });
+  response.status(404).send({ msg: 'Path not found' });
 }
 
 function handlePSQL400s(error, request, response, next) {
-  if (error.code === "22P02") {
-    response.status(400).send({ msg: "Bad request" });
-  } else if (error.code === "23503" && error.detail.includes("article")) {
-    response.status(404).send({ msg: "Article_id not found" });
-  } else if (error.code === "23503" && error.detail.includes("author")) {
-    response.status(404).send({ msg: "User not found" });
+  if (error.code === '22P02') {
+    response.status(400).send({ msg: 'Bad request' });
+  } else if (error.code === '23503' && error.detail.includes('article')) {
+    response.status(404).send({ msg: 'Article_id not found' });
+  } else if (error.code === '23503' && error.detail.includes('author')) {
+    response.status(404).send({ msg: 'User not found' });
   } else {
     next(error);
   }
@@ -24,7 +24,7 @@ function handleCustomErrors(error, request, response, next) {
 
 function handleServerErrors(error, request, response, next) {
   console.log(error);
-  response.status(500).send({ msg: "Server error" });
+  response.status(500).send({ msg: 'Server error' });
 }
 
 module.exports = {

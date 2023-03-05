@@ -1,4 +1,4 @@
-const db = require("../db/connection.js");
+const db = require('../db/connection.js');
 
 fetchCommentsByArticleId = (article_id) => {
   const queryString = `SELECT * FROM comments
@@ -15,7 +15,7 @@ addComment = (newComment, article_id) => {
   if (!author || !body) {
     return Promise.reject({
       status: 400,
-      msg: "Bad request",
+      msg: 'Bad request',
     });
   }
 
@@ -47,10 +47,41 @@ removeComment = (comment_id) => {
     )
     .then((result) => {
       if (result.rowCount === 0) {
-        return Promise.reject({ status: 404, msg: "Comment not found" });
+        return Promise.reject({ status: 404, msg: 'Comment not found' });
       }
       return result.rows;
     });
 };
 
-module.exports = { fetchCommentsByArticleId, addComment, removeComment };
+updateCommentVotes = (comment_id, inc_votes) => {
+  if (!inc_votes) {
+    return Promise.reject({
+      status: 400,
+      msg: 'Bad request',
+    });
+  }
+
+  return db
+    .query(
+      `
+      UPDATE comments
+      SET votes = votes + $1
+      WHERE comment_id = $2
+      RETURNING *
+    `,
+      [inc_votes, comment_id]
+    )
+    .then((result) => {
+      if (result.rowCount === 0) {
+        return Promise.reject({ status: 404, msg: 'Comment not found' });
+      }
+      return result.rows[0];
+    });
+};
+
+module.exports = {
+  fetchCommentsByArticleId,
+  addComment,
+  removeComment,
+  updateCommentVotes,
+};
