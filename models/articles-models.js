@@ -1,33 +1,33 @@
-const db = require("../db/connection.js");
+const db = require('../db/connection.js');
 
 fetchArticles = (topic, sort_by, order) => {
-  const validTopicByOptions = ["mitch", "cats", "paper"];
+  const validTopicByOptions = ['mitch', 'cats', 'paper'];
   if (topic && !validTopicByOptions.includes(topic)) {
     return Promise.reject({
       status: 404,
-      msg: "Bad request",
+      msg: 'Bad request',
     });
   }
 
   const validSortByOptions = [
-    "author",
-    "title",
-    "article_id",
-    "votes",
-    "comment_count",
+    'author',
+    'title',
+    'article_id',
+    'votes',
+    'comment_count',
   ];
   if (sort_by && !validSortByOptions.includes(sort_by)) {
     return Promise.reject({
       status: 400,
-      msg: "Bad request",
+      msg: 'Bad request',
     });
   }
 
-  const validOrderByOptions = ["ascending", "descending"];
+  const validOrderByOptions = ['ascending', 'descending'];
   if (order && !validOrderByOptions.includes(order)) {
     return Promise.reject({
       status: 400,
-      msg: "Bad request",
+      msg: 'Bad request',
     });
   }
 
@@ -50,12 +50,12 @@ fetchArticles = (topic, sort_by, order) => {
   GROUP BY articles.article_id
   `;
 
-  let orderArticlesBy = "DESC";
+  let orderArticlesBy = 'DESC';
 
-  if (order === "descending") {
-    orderArticlesBy = "DESC";
-  } else if (order === "ascending") {
-    orderArticlesBy = "ASC";
+  if (order === 'descending') {
+    orderArticlesBy = 'DESC';
+  } else if (order === 'ascending') {
+    orderArticlesBy = 'ASC';
   }
 
   if (sort_by) {
@@ -85,7 +85,7 @@ fetchArticleById = (article_id) => {
     )
     .then((result) => {
       if (result.rowCount === 0) {
-        return Promise.reject({ status: 404, msg: "Article not found" });
+        return Promise.reject({ status: 404, msg: 'Article not found' });
       }
       return result.rows[0];
     });
@@ -95,7 +95,7 @@ updateArticleVotes = (article_id, inc_votes) => {
   if (!inc_votes) {
     return Promise.reject({
       status: 400,
-      msg: "Bad request",
+      msg: 'Bad request',
     });
   }
 
@@ -111,7 +111,7 @@ updateArticleVotes = (article_id, inc_votes) => {
     )
     .then((result) => {
       if (result.rowCount === 0) {
-        return Promise.reject({ status: 404, msg: "Article not found" });
+        return Promise.reject({ status: 404, msg: 'Article not found' });
       }
       return result.rows[0];
     });
