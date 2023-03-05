@@ -40,21 +40,52 @@ describe('app', () => {
     });
   });
 
-  describe('GET /api/topics', () => {
-    it('200: responds with an array of all the topic objects containing the properties: slug and description', () => {
-      return request(app)
-        .get('/api/topics')
-        .expect(200)
-        .then(({ body }) => {
-          const { topics } = body;
+  describe('Endpoint: /api/topics', () => {
+    describe('GET /api/topics', () => {
+      it('200: responds with an array of all the topic objects containing the properties: slug and description', () => {
+        return request(app)
+          .get('/api/topics')
+          .expect(200)
+          .then(({ body }) => {
+            const { topics } = body;
 
-          expect(topics).toHaveLength(3);
+            expect(topics).toHaveLength(3);
 
-          topics.forEach((topic) => {
-            expect(topic).toHaveProperty('description', expect.any(String));
-            expect(topic).toHaveProperty('slug', expect.any(String));
+            topics.forEach((topic) => {
+              expect(topic).toHaveProperty('description', expect.any(String));
+              expect(topic).toHaveProperty('slug', expect.any(String));
+            });
           });
-        });
+      });
+    });
+    describe('POST /api/topics', () => {
+      it('201: responds with the posted topic when passed an object with the essential properties: slug and description', () => {
+        const newTopic = {
+          slug: 'test topic name',
+          description: 'test description',
+        };
+        return request(app)
+          .post('/api/topics')
+          .send(newTopic)
+          .expect(201)
+          .then(({ body }) => {
+            const { topic } = body;
+            expect(topic.slug).toBe('test topic name');
+            expect(topic.description).toBe('test description');
+          });
+      });
+      it("400: responds with a message of 'Bad request' when sent a post request when passed an object without the essential properties", () => {
+        const newTopic = {};
+
+        return request(app)
+          .post('/api/topics')
+          .send(newTopic)
+          .expect(400)
+          .then((response) => {
+            const msg = response.body.msg;
+            expect(msg).toBe('Bad request');
+          });
+      });
     });
   });
 

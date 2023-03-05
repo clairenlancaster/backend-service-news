@@ -3,7 +3,7 @@ const app = express();
 const {
   sendAvailableEndpoints,
 } = require('./controllers/endpoints-controllers');
-const { sendTopics } = require('./controllers/topics-controllers');
+const { sendTopics, postTopic } = require('./controllers/topics-controllers');
 const {
   sendArticles,
   sendArticleById,
@@ -31,6 +31,7 @@ app.use(express.json());
 
 app.get('/api', sendAvailableEndpoints);
 app.get('/api/topics', sendTopics);
+app.post('/api/topics', postTopic);
 app.get('/api/users', sendUsers);
 app.get('/api/users/:username', sendUserByUsername);
 app.get('/api/articles', sendArticles);
