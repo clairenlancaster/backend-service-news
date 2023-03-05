@@ -8,6 +8,7 @@ const {
   sendArticles,
   sendArticleById,
   patchArticleVotes,
+  postArticle,
 } = require('./controllers/articles-controllers');
 const {
   postComment,
@@ -33,6 +34,7 @@ app.get('/api/topics', sendTopics);
 app.get('/api/users', sendUsers);
 app.get('/api/users/:username', sendUserByUsername);
 app.get('/api/articles', sendArticles);
+app.post('/api/articles', postArticle);
 app.get('/api/articles/:article_id', sendArticleById);
 app.get('/api/articles/:article_id/comments', sendCommentsByArticleId);
 app.post('/api/articles/:article_id/comments', postComment);

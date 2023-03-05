@@ -117,4 +117,42 @@ updateArticleVotes = (article_id, inc_votes) => {
     });
 };
 
-module.exports = { fetchArticles, fetchArticleById, updateArticleVotes };
+addArticle = (newArticle) => {
+  const { author, title, topic, body } = newArticle;
+
+  if (!author || !body || !topic || !title) {
+    return Promise.reject({
+      status: 400,
+      msg: 'Bad request',
+    });
+  }
+
+  const validTopicByOptions = ['mitch', 'cats', 'paper'];
+  if (topic && !validTopicByOptions.includes(topic)) {
+    return Promise.reject({
+      status: 404,
+      msg: 'Topic not found',
+    });
+  }
+
+  let queryString = `
+    INSERT INTO articles
+      (author, title, topic, body)
+    VALUES
+      ($1, $2, $3, $4)
+    RETURNING *
+  `;
+
+  return db
+    .query(queryString, [author, title, topic, body])
+    .then(({ rows }) => {
+      return rows[0];
+    });
+};
+
+module.exports = {
+  fetchArticles,
+  fetchArticleById,
+  updateArticleVotes,
+  addArticle,
+};

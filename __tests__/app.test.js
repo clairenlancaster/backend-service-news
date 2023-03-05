@@ -401,6 +401,111 @@ describe('app', () => {
       });
     });
 
+    describe('POST /api/articles', () => {
+      it('201: responds with the posted article when passed an object with the essential properties: author, title, body, topic', () => {
+        const newArticle = {
+          author: 'butter_bridge',
+          title: 'testTitle',
+          body: 'testBody',
+          topic: 'mitch',
+        };
+
+        return request(app)
+          .post('/api/articles')
+          .send(newArticle)
+          .expect(201)
+          .then(({ body }) => {
+            const { article } = body;
+            expect(article.author).toBe('butter_bridge');
+            expect(article.body).toBe('testBody');
+            expect(article.body).toBe('testBody');
+            expect(article.topic).toBe('mitch');
+            expect(article.article_img_url).toBe(
+              'https://images.pexels.com/photos/97050/pexels-photo-97050.jpeg?w=700&h=700'
+            );
+            expect(article.votes).toBe(0);
+            expect(article).toHaveProperty('created_at', expect.any(String));
+            expect(article).toHaveProperty('article_id', expect.any(Number));
+          });
+      });
+      it('201: responds with the posted article and ignores the non-essential properties in the object: created_at and votes', () => {
+        const newArticle = {
+          author: 'butter_bridge',
+          title: 'testTitle',
+          body: 'testBody',
+          topic: 'mitch',
+          article_img_url:
+            'https://images.pexels.com/photos/97050/pexels-photo-97050.jpeg?w=700&h=700',
+          comment_count: 5,
+          created_at: 15830256183400,
+          votes: 1,
+          article_id: 24,
+        };
+
+        return request(app)
+          .post('/api/articles')
+          .send(newArticle)
+          .expect(201)
+          .then(({ body }) => {
+            const { article } = body;
+            expect(article.author).toBe('butter_bridge');
+            expect(article.body).toBe('testBody');
+            expect(article.body).toBe('testBody');
+            expect(article.topic).toBe('mitch');
+            expect(article.article_img_url).toBe(
+              'https://images.pexels.com/photos/97050/pexels-photo-97050.jpeg?w=700&h=700'
+            );
+            expect(article.created_at).not.toBe('15830256183400');
+            expect(article.votes).toBe(0);
+            expect(article.article_id).toBe(13);
+          });
+      });
+      it("400: responds with a message of 'Bad request' when sent a post request when passed an object without the essential properties", () => {
+        const newArticle = {};
+
+        return request(app)
+          .post('/api/articles')
+          .send(newArticle)
+          .expect(400)
+          .then((response) => {
+            const msg = response.body.msg;
+            expect(msg).toBe('Bad request');
+          });
+      });
+      it("404: responds with a message of 'Topic not found' when sent a post request with a topic that is not valid - topic does not exist on topics' table", () => {
+        const newArticle = {
+          author: 'butter_bridge',
+          title: 'testTitle',
+          body: 'testBody',
+          topic: 'yellow',
+        };
+        return request(app)
+          .post('/api/articles')
+          .send(newArticle)
+          .expect(404)
+          .then((response) => {
+            const msg = response.body.msg;
+            expect(msg).toBe('Topic not found');
+          });
+      });
+      it("404: responds with a message of 'User not found' when sent a post request with a username that is not valid - user does not exist on users' table", () => {
+        const newArticle = {
+          author: 'not_a_user',
+          title: 'testTitle',
+          body: 'testBody',
+          topic: 'mitch',
+        };
+        return request(app)
+          .post('/api/articles')
+          .send(newArticle)
+          .expect(404)
+          .then((response) => {
+            const msg = response.body.msg;
+            expect(msg).toBe('User not found');
+          });
+      });
+    });
+
     describe('GET /api/articles/:article_id', () => {
       it('200: returns an article object with the properties: author, title, article_id, body, topic, created_at, votes, comment_count and article_img_url', () => {
         return request(app)
@@ -628,9 +733,11 @@ describe('app', () => {
             expect(comment.article_id).toBe(1);
           });
       });
-      it("400: responds with a message of 'Bad request' when sent a post request without a body", () => {
+      it("400: responds with a message of 'Bad request' when sent a post request when passed an object without the essential properties", () => {
+        const newComment = {};
         return request(app)
           .post('/api/articles/1/comments')
+          .send(newComment)
           .expect(400)
           .then((response) => {
             const msg = response.body.msg;

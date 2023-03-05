@@ -2,7 +2,8 @@ const {
   fetchArticles,
   fetchArticleById,
   updateArticleVotes,
-} = require("../models/articles-models");
+  addArticle,
+} = require('../models/articles-models');
 
 sendArticles = (request, response, next) => {
   const { topic, sort_by, order } = request.query;
@@ -38,4 +39,21 @@ patchArticleVotes = (request, response, next) => {
     });
 };
 
-module.exports = { sendArticles, sendArticleById, patchArticleVotes };
+postArticle = (request, response, next) => {
+  const newArticle = request.body;
+
+  addArticle(newArticle)
+    .then((article) => {
+      response.status(201).send({ article });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
+module.exports = {
+  sendArticles,
+  sendArticleById,
+  patchArticleVotes,
+  postArticle,
+};
