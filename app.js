@@ -9,6 +9,7 @@ const {
   sendArticleById,
   patchArticleVotes,
   postArticle,
+  deleteArticle,
 } = require('./controllers/articles-controllers');
 const {
   postComment,
@@ -37,6 +38,7 @@ app.get('/api/users/:username', sendUserByUsername);
 app.get('/api/articles', sendArticles);
 app.post('/api/articles', postArticle);
 app.get('/api/articles/:article_id', sendArticleById);
+app.delete('/api/articles/:article_id', deleteArticle);
 app.get('/api/articles/:article_id/comments', sendCommentsByArticleId);
 app.post('/api/articles/:article_id/comments', postComment);
 app.patch('/api/articles/:article_id', patchArticleVotes);

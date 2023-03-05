@@ -3,7 +3,10 @@ const {
   fetchArticleById,
   updateArticleVotes,
   addArticle,
+  removeArticle,
 } = require('../models/articles-models');
+
+const { removeCommentsByArticleId } = require('../models/comments-models');
 
 sendArticles = (request, response, next) => {
   const { topic, sort_by, order } = request.query;
@@ -51,9 +54,25 @@ postArticle = (request, response, next) => {
     });
 };
 
+deleteArticle = (request, response, next) => {
+  const { article_id } = request.params;
+
+  Promise.all([
+    removeCommentsByArticleId(article_id),
+    removeArticle(article_id),
+  ])
+    .then(() => {
+      response.status(204).send();
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
 module.exports = {
   sendArticles,
   sendArticleById,
   patchArticleVotes,
   postArticle,
+  deleteArticle,
 };

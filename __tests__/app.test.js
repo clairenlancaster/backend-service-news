@@ -681,6 +681,28 @@ describe('app', () => {
       });
     });
 
+    describe.only('DELETE /api/articles/:article_id', () => {
+      it('204: responds with no content when sent a request to delete an article with a specific article_id', () => {
+        return request(app).delete('/api/articles/1').expect(204);
+      });
+      it("404: responds with a message of 'Article not found' when sent a delete request for an article_id that is valid but non-existent - cannot delete a non-existent article", () => {
+        return request(app)
+          .delete('/api/articles/1001')
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe('Article not found');
+          });
+      });
+      it("400: responds with a message of 'Bad request' when sent a delete request for an invalid article_id", () => {
+        return request(app)
+          .delete('/api/comments/invalid-comment_id')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe('Bad request');
+          });
+      });
+    });
+
     describe('GET /api/articles/:article_id/comments', () => {
       it('200: returns an array of comments for the given article_id - each comment should have the properties: comment_id, votes, created_at, author, body,article_id and comment_count', () => {
         return request(app)
@@ -822,7 +844,7 @@ describe('app', () => {
       it('204: responds with no content when sent a request to delete a comment with a specific comment_id', () => {
         return request(app).delete('/api/comments/1').expect(204);
       });
-      it("404: responds with a message of 'Comment not found' when sent a delete request for an comment_id that is valid but non-existent - cannot delete a non-existent article", () => {
+      it("404: responds with a message of 'Comment not found' when sent a delete request for an comment_id that is valid but non-existent - cannot delete a a non-existent comment", () => {
         return request(app)
           .delete('/api/comments/100')
           .expect(404)
