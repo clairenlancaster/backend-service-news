@@ -448,7 +448,7 @@ describe('app', () => {
           .then(({ body }) => {
             const { article } = body;
             expect(article.author).toBe('butter_bridge');
-            expect(article.body).toBe('testBody');
+            expect(article.title).toBe('testTitle');
             expect(article.body).toBe('testBody');
             expect(article.topic).toBe('mitch');
             expect(article.article_img_url).toBe(
@@ -457,6 +457,7 @@ describe('app', () => {
             expect(article.votes).toBe(0);
             expect(article).toHaveProperty('created_at', expect.any(String));
             expect(article).toHaveProperty('article_id', expect.any(Number));
+            expect(article).toHaveProperty('comment_count', expect.any(Number));
           });
       });
       it('201: responds with the posted article and ignores the non-essential properties in the object: created_at and votes', () => {
@@ -489,6 +490,7 @@ describe('app', () => {
             expect(article.created_at).not.toBe('15830256183400');
             expect(article.votes).toBe(0);
             expect(article.article_id).toBe(13);
+            expect(article).toHaveProperty('comment_count', expect.any(Number));
           });
       });
       it("400: responds with a message of 'Bad request' when sent a post request when passed an object without the essential properties", () => {
@@ -543,6 +545,7 @@ describe('app', () => {
           .get('/api/articles/1')
           .expect(200)
           .then(({ body }) => {
+
             const { articles } = body;
             expect(typeof articles).toBe('object');
             expect(articles.author).toBe('butter_bridge');
@@ -556,6 +559,7 @@ describe('app', () => {
               'article_img_url',
               expect.any(String)
             );
+            expect(articles.body).toBe('I find this existence challenging');
           });
       });
       it("400: responds with a message of 'Bad request' when sent an invalid article_id", () => {

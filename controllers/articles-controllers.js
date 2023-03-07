@@ -47,6 +47,9 @@ postArticle = (request, response, next) => {
 
   addArticle(newArticle)
     .then((article) => {
+      return fetchArticleById(article.article_id);
+    })
+    .then((article) => {
       response.status(201).send({ article });
     })
     .catch((error) => {
