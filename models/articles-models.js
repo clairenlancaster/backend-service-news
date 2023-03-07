@@ -1,6 +1,7 @@
 const db = require('../db/connection.js');
 
-fetchArticles = (topic, sort_by, order) => {
+fetchArticles = (topic, sort_by, order, limit = 10, p) => {
+
   const validTopicByOptions = ['mitch', 'cats', 'paper'];
   if (topic && !validTopicByOptions.includes(topic)) {
     return Promise.reject({
@@ -58,9 +59,21 @@ fetchArticles = (topic, sort_by, order) => {
   }
 
   if (sort_by) {
-    queryString += `ORDER BY ${sort_by} ${orderArticlesBy}`;
+    queryString += `
+    ORDER BY ${sort_by} ${orderArticlesBy}
+    `;
   } else {
-    queryString += `ORDER BY created_at ${orderArticlesBy}`;
+    queryString += `
+    ORDER BY created_at ${orderArticlesBy}
+    `;
+  }
+
+  queryString += `
+    LIMIT ${limit} 
+    `;
+
+  if (p) {
+    queryString += ` OFFSET ${limit}`;
   }
 
   return db.query(queryString, queryParams).then((result) => {

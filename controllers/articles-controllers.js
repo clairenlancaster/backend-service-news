@@ -9,13 +9,15 @@ const {
 const { removeCommentsByArticleId } = require('../models/comments-models');
 
 sendArticles = (request, response, next) => {
-  const { topic, sort_by, order } = request.query;
+  const { topic, sort_by, order, limit, p} = request.query; 
 
-  fetchArticles(topic, sort_by, order)
+    fetchArticles(topic, sort_by, order, limit, p)
     .then((articles) => response.status(200).send({ articles }))
     .catch((error) => {
       next(error);
     });
+
+
 };
 
 sendArticleById = (request, response, next) => {
