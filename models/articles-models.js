@@ -8,7 +8,6 @@ fetchArticles = (topic, sort_by, order) => {
       msg: 'Bad request',
     });
   }
-
   const validSortByOptions = [
     'author',
     'title',

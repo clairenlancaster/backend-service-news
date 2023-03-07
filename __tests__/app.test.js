@@ -198,7 +198,7 @@ describe('app', () => {
     });
 
     describe('GET /api/articles?topic=...', () => {
-      it('200: accepts a topics query - responds with an array of article objects that have been filtered by the specified topics value', () => {
+      it('200: accepts a topic query - responds with an array of article objects that have been filtered by the specified topics value', () => {
         return request(app)
           .get('/api/articles?topic=mitch')
           .expect(200)
