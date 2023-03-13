@@ -16,8 +16,6 @@ sendArticles = (request, response, next) => {
     .catch((error) => {
       next(error);
     });
-
-
 };
 
 sendArticleById = (request, response, next) => {

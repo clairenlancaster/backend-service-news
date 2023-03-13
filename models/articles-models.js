@@ -5,7 +5,7 @@ fetchArticles = (topic, sort_by, order, limit = 10, p) => {
   const validTopicByOptions = ['mitch', 'cats', 'paper'];
   if (topic && !validTopicByOptions.includes(topic)) {
     return Promise.reject({
-      status: 404,
+      status: 400,
       msg: 'Bad request',
     });
   }
@@ -71,6 +71,8 @@ fetchArticles = (topic, sort_by, order, limit = 10, p) => {
   queryString += `
     LIMIT ${limit} 
     `;
+
+  // p - limit
 
   if (p) {
     queryString += ` OFFSET ${limit}`;

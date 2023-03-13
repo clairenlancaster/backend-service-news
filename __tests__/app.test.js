@@ -144,7 +144,7 @@ describe('app', () => {
     });
   });
 
-  describe('Endpoint: /api/articles', () => {
+  describe('Endpoint: /api/articles', () => { 
     describe('GET /api/articles', () => {
       it('200: responds with an array of all the article objects containing the properties: author, title, article_id, topic, created_at, votes, article_img_url, comment_count', () => {
         return request(app)
@@ -239,10 +239,10 @@ describe('app', () => {
             });
           });
       });
-      it("404: if invalid topic query provided - responds with a message of 'Bad request'", () => {
+      it("400: if invalid topic query provided - responds with a message of 'Bad request'", () => {
         return request(app)
           .get('/api/articles?topic=invalid')
-          .expect(404)
+          .expect(400)
           .then(({ body }) => {
             expect(body.msg).toBe('Bad request');
           });
@@ -500,7 +500,7 @@ describe('app', () => {
     describe('GET /api/articles?p=...', () => {
       it('200: accepts a page (p) query - responds with an array of article objects from that page using the default article limit of 10', () => {
         return request(app)
-          .get('/api/articles?p=2')
+          .get('/api/articles?p=3')
           .expect(200)
           .then(({ body }) => {
             const { articles } = body;
@@ -552,10 +552,10 @@ describe('app', () => {
             });
           });
       });
-      // it("400: responds with 'Bad request' when sent a page (p) query with an invalid value", () => {
+      // it("404: responds with 'Bad request' when sent a page (p) query with an invalid value", () => {
       //   return request(app)
-      //     .get('/api/articles?p=7')
-      //     .expect(400)
+      //     .get('/api/articles?p=invalid')
+      //     .expect(404)
       //     .then(({ body }) => {
       //       expect(body.msg).toBe('Bad request');
       //     });
